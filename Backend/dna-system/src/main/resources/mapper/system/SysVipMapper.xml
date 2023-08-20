@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dna.system.mapper.SysVipMapper">
+
+    <resultMap type="SysVip" id="SysVipResult">
+        <result property="vipId"    column="vip_id"    />
+        <result property="name"    column="name"    />
+        <result property="expire"    column="expire"    />
+        <result property="number"    column="number"    />
+        <result property="price"    column="price"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectSysVipVo">
+        select vip_id, name, expire, number, price, create_by, avatar, create_time, update_by, update_time from sys_vip
+    </sql>
+
+    <select id="selectSysVipList" parameterType="SysVip" resultMap="SysVipResult">
+        <include refid="selectSysVipVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="expire != null  and expire != ''"> and expire = #{expire}</if>
+            <if test="number != null "> and number = #{number}</if>
+            <if test="price != null  and price != ''"> and price = #{price}</if>
+            <if test="avatar != null  and avatar != ''"> and avatar = #{avatar}</if>
+        </where>
+    </select>
+
+    <select id="selectSysVipById" parameterType="Integer" resultMap="SysVipResult">
+        <include refid="selectSysVipVo"/>
+        where vip_id = #{vipId}
+    </select>
+
+    <insert id="insertSysVip" parameterType="SysVip">
+        insert into sys_vip
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="vipId != null">vip_id,</if>
+            <if test="name != null">`name`,</if>
+            <if test="expire != null">expire,</if>
+            <if test="number != null">`number`,</if>
+            <if test="price != null">price,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="avatar != null">avatar,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="vipId != null">#{vipId},</if>
+            <if test="name != null">#{name},</if>
+            <if test="expire != null">#{expire},</if>
+            <if test="number != null">#{number},</if>
+            <if test="price != null">#{price},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="avatar != null">#{avatar},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysVip" parameterType="SysVip">
+        update sys_vip
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">`name` = #{name},</if>
+            <if test="expire != null">expire = #{expire},</if>
+            <if test="number != null">`number` = #{number},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where vip_id = #{vipId}
+    </update>
+
+    <delete id="deleteSysVipById" parameterType="Integer">
+        delete from sys_vip where vip_id = #{vipId}
+    </delete>
+
+    <delete id="deleteSysVipByIds" parameterType="String">
+        delete from sys_vip where vip_id in
+        <foreach item="vipId" collection="array" open="(" separator="," close=")">
+            #{vipId}
+        </foreach>
+    </delete>
+</mapper>

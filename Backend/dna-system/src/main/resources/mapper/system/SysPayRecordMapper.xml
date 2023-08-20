@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dna.system.mapper.SysPayRecordMapper">
+
+    <resultMap type="SysPayRecord" id="SysPayRecordResult">
+        <result property="recordId"    column="record_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="vipId"    column="vip_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <association property="user" javaType="SysUser"
+                     select="com.dna.system.mapper.SysUserMapper.selectUserById" column="user_id">
+        </association>
+        <association property="vip" javaType="SysVip"
+                     select="com.dna.system.mapper.SysVipMapper.selectSysVipById" column="vip_id">
+        </association>
+    </resultMap>
+
+    <sql id="selectSysPayRecordVo">
+        select record_id, user_id, vip_id, create_by, create_time, update_by, update_time from sys_pay_record
+    </sql>
+
+    <select id="selectSysPayRecordList" parameterType="SysPayRecord" resultMap="SysPayRecordResult">
+        <include refid="selectSysPayRecordVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="vipId != null "> and vip_id = #{vipId}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectSysPayRecordById" parameterType="Integer" resultMap="SysPayRecordResult">
+        <include refid="selectSysPayRecordVo"/>
+        where record_id = #{recordId}
+    </select>
+
+    <insert id="insertSysPayRecord" parameterType="SysPayRecord">
+        insert into sys_pay_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="recordId != null">record_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="vipId != null">vip_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="recordId != null">#{recordId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="vipId != null">#{vipId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysPayRecord" parameterType="SysPayRecord">
+        update sys_pay_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="vipId != null">vip_id = #{vipId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where record_id = #{recordId}
+    </update>
+
+    <delete id="deleteSysPayRecordById" parameterType="Integer">
+        delete from sys_pay_record where record_id = #{recordId}
+    </delete>
+
+    <delete id="deleteSysPayRecordByIds" parameterType="String">
+        delete from sys_pay_record where record_id in
+        <foreach item="recordId" collection="array" open="(" separator="," close=")">
+            #{recordId}
+        </foreach>
+    </delete>
+</mapper>

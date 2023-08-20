@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dna.system.mapper.SysLocalStorageMapper">
+
+    <resultMap type="SysLocalStorage" id="SysLocalStorageResult">
+        <result property="storageId"    column="storage_id"    />
+        <result property="encode"    column="encode"    />
+        <result property="name"    column="name"    />
+        <result property="path"    column="path"    />
+        <result property="encryptedPath"    column="encrypted_path"    />
+        <result property="type"    column="type"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="localName"    column="local_name"    />
+        <result property="keyValue"    column="key_value"    />
+    </resultMap>
+
+    <sql id="selectSysLocalStorageVo">
+        select storage_id, encode, name, path, encrypted_path, type, status, create_by, update_by, create_time, update_time, local_name, key_value from sys_local_storage
+    </sql>
+
+    <select id="selectLocalStorageList" parameterType="SysLocalStorage" resultMap="SysLocalStorageResult">
+        <include refid="selectSysLocalStorageVo"/>
+        <where>
+            <if test="encode != null  and encode != ''"> and encode = #{encode}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="path != null  and path != ''"> and path = #{path}</if>
+            <if test="encryptedPath != null  and encryptedPath != ''"> and encrypted_path = #{encryptedPath}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="localName != null  and localName != ''"> and local_name like concat('%', #{localName}, '%')</if>
+            <if test="keyValue != null  and keyValue != ''"> and key_value = #{keyValue}</if>
+        </where>
+    </select>
+
+    <select id="selectSysLocalStorageById" parameterType="Long" resultMap="SysLocalStorageResult">
+        <include refid="selectSysLocalStorageVo"/>
+        where storage_id = #{storageId}
+    </select>
+
+    <insert id="insertSysLocalStorage" parameterType="SysLocalStorage" useGeneratedKeys="true" keyProperty="storageId">
+        insert into sys_local_storage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="encode != null">encode,</if>
+            <if test="name != null">name,</if>
+            <if test="path != null">path,</if>
+            <if test="encryptedPath != null">encrypted_path,</if>
+            <if test="type != null">type,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="localName != null">local_name,</if>
+            <if test="keyValue != null">key_value,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="encode != null">#{encode},</if>
+            <if test="name != null">#{name},</if>
+            <if test="path != null">#{path},</if>
+            <if test="encryptedPath != null">#{encryptedPath},</if>
+            <if test="type != null">#{type},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="localName != null">#{localName},</if>
+            <if test="keyValue != null">#{keyValue},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysLocalStorage" parameterType="SysLocalStorage">
+        update sys_local_storage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="encode != null">encode = #{encode},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="path != null">path = #{path},</if>
+            <if test="encryptedPath != null">encrypted_path = #{encryptedPath},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="localName != null">local_name = #{localName},</if>
+            <if test="keyValue != null">key_value = #{keyValue},</if>
+        </trim>
+        where storage_id = #{storageId}
+    </update>
+
+    <delete id="deleteSysLocalStorageById" parameterType="Long">
+        delete from sys_local_storage where storage_id = #{storageId}
+    </delete>
+
+    <delete id="deleteSysLocalStorageByIds" parameterType="String">
+        delete from sys_local_storage where storage_id in
+        <foreach item="storageId" collection="array" open="(" separator="," close=")">
+            #{storageId}
+        </foreach>
+    </delete>
+</mapper>
